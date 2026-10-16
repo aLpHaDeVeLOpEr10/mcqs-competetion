@@ -1,0 +1,23 @@
+# Alternative to Supervisor (use one or the other, not both).
+# /etc/systemd/system/mcq-reverb.service → systemctl daemon-reload && systemctl enable --now mcq-reverb
+[Unit]
+Description=MCQ Competition - Laravel Reverb WebSocket server
+After=network.target mariadb.service
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/mcq/current
+ExecStart=/usr/bin/php /var/www/mcq/current/artisan reverb:start --no-interaction
+Restart=always
+RestartSec=3
+LimitNOFILE=10000
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/www/mcq/shared/storage /var/log/mcq
+
+[Install]
+WantedBy=multi-user.target

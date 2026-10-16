@@ -1,0 +1,1 @@
+@include('errors.server', ['code' => 503, 'title' => 'Down for maintenance', 'message' => 'We are carrying out scheduled maintenance and will be back shortly. Competition timings are kept on our server.'])

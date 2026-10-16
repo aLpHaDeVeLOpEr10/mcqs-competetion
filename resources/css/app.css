@@ -1,0 +1,187 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+/* Compiled Blade views are not scanned: they would make the bundle depend on the view cache. */
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Surfaces: dark navy / charcoal */
+    --color-ink-950: #070b14;
+    --color-ink-900: #0b1220;
+    --color-ink-850: #0f172a;
+    --color-ink-800: #141e33;
+    --color-ink-700: #1e2a44;
+    --color-ink-600: #2b3a5a;
+    --color-ink-500: #5d6d8f; /* decorative only: below 4.5:1 on dark surfaces */
+    --color-ink-400: #8a9bbd;
+    --color-ink-300: #aebbd4;
+    --color-ink-200: #cdd6e8;
+    --color-ink-100: #e6ecf7;
+
+    /* Restrained aqua accent */
+    --color-accent-200: #a7f3e6;
+    --color-accent-300: #5eead4;
+    --color-accent-400: #2dd4bf;
+    --color-accent-500: #14b8a6;
+    --color-accent-600: #0d9488;
+}
+
+@layer base {
+    html {
+        color-scheme: dark;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        @apply bg-ink-950 text-ink-100 antialiased;
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-accent-300;
+    }
+
+    ::selection {
+        @apply bg-accent-500/40 text-white;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+@layer components {
+    /* Long-form copy on rules and legal pages */
+    .prose-page {
+        @apply max-w-3xl space-y-4 leading-relaxed text-ink-300;
+    }
+
+    .prose-page h2 {
+        @apply pt-6 text-xl font-semibold text-ink-100;
+    }
+
+    .prose-page h3 {
+        @apply pt-2 font-semibold text-ink-100;
+    }
+
+    .prose-page ul {
+        @apply list-disc space-y-1 pl-6;
+    }
+
+    .prose-page ol {
+        @apply list-decimal space-y-1 pl-6;
+    }
+
+    .prose-page a {
+        @apply text-accent-300 underline underline-offset-2 hover:text-accent-200;
+    }
+
+    /* Native <details> disclosure used for FAQs and the mobile menu (works without JS) */
+    details > summary {
+        @apply cursor-pointer list-none;
+    }
+
+    details > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    dialog::backdrop {
+        background: rgb(7 11 20 / 0.75);
+    }
+
+    /* Horizontally scrolling tab rows: fade the edges to show there is more. */
+    .scroll-fade {
+        mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 2rem), transparent);
+        scrollbar-width: none;
+    }
+
+    .scroll-fade::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/*
+ * Responsive tables (unlayered, so it overrides the cells' utility classes): below the sm breakpoint each row becomes a labelled card.
+ * Give every <td> a data-label (its column name). A cell with data-primary
+ * becomes the row's heading (no label).
+ */
+@media (width < 40rem) {
+    .table-stack thead {
+        @apply sr-only;
+    }
+
+    .table-stack,
+    .table-stack tbody,
+    .table-stack tr,
+    .table-stack td {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .table-stack tr {
+        @apply space-y-1.5 px-4 py-3;
+    }
+
+    .table-stack td {
+        @apply flex items-baseline justify-between gap-4 p-0 text-right;
+    }
+
+    .table-stack td::before {
+        content: attr(data-label);
+        @apply shrink-0 text-left text-xs font-medium text-ink-400;
+    }
+
+    .table-stack td[data-primary] {
+        @apply justify-start text-left text-base;
+    }
+
+    .table-stack td[data-primary]::before {
+        content: none;
+    }
+}
+
+/* Very wide tables (many columns) stay stacked up to the lg breakpoint. */
+@media (width < 64rem) {
+    .table-stack-lg thead {
+        @apply sr-only;
+    }
+
+    .table-stack-lg,
+    .table-stack-lg tbody,
+    .table-stack-lg tr,
+    .table-stack-lg td {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .table-stack-lg tr {
+        @apply space-y-1.5 px-4 py-3;
+    }
+
+    .table-stack-lg td {
+        @apply flex items-baseline justify-between gap-4 p-0 text-right;
+    }
+
+    .table-stack-lg td::before {
+        content: attr(data-label);
+        @apply shrink-0 text-left text-xs font-medium text-ink-400;
+    }
+
+    .table-stack-lg td[data-primary] {
+        @apply justify-start text-left text-base;
+    }
+
+    .table-stack-lg td[data-primary]::before {
+        content: none;
+    }
+}

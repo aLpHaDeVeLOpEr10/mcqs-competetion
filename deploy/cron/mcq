@@ -1,0 +1,17 @@
+# /etc/cron.d/mcq  (root-owned, mode 0644). Times are server time (UTC).
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Laravel scheduler: every minute. It runs competitions:tick every 5 seconds (sub-minute task),
+# competitions:recover, payments/withdrawals reconciliation, prizes, reminders, monitoring and
+# retention (see routes/console.php). Must run as the same user as the workers.
+* * * * * www-data cd /var/www/mcq/current && php artisan schedule:run >> /dev/null 2>&1
+
+# Backups (deploy/scripts/backup.sh): database every 6 hours, files nightly. Runs as a dedicated
+# backup user that can read the DB backup credentials (/etc/mcq/backup.cnf) and storage/.
+15 */6 * * * mcqbackup /var/www/mcq/current/deploy/scripts/backup.sh database >> /var/log/mcq/backup.log 2>&1
+45 2 * * *   mcqbackup /var/www/mcq/current/deploy/scripts/backup.sh files    >> /var/log/mcq/backup.log 2>&1
+
+# Health check every minute: alerts (via the script's ALERT_COMMAND) when /up, the scheduler,
+# queues, failed jobs, competition recovery or disk space need attention.
+* * * * * www-data /var/www/mcq/current/deploy/scripts/healthcheck.sh >> /var/log/mcq/healthcheck.log 2>&1

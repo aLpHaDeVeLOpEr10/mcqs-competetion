@@ -1,0 +1,1 @@
+@include('errors.server', ['code' => 500, 'title' => 'Something went wrong', 'message' => 'An unexpected error occurred on our side and has been logged. Please try again in a few minutes. If it keeps happening, contact support and quote the reference below.'])
